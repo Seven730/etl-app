@@ -15,7 +15,7 @@ function App(): JSX.Element {
   const [cars, setCars] = useState<undefined | Object>();
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const rowsPerPage: number = 10;
   const [isTransformed, setIsTransformed] = useState<boolean>(false);
 
   let carsArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "K"];
@@ -41,21 +41,19 @@ function App(): JSX.Element {
       });
   };
 
-  const handleTransform = () => {
+  const handleTransform = (): void => {
     setIsTransformed(true);
   };
 
   const handleLoad = async (): Promise<any> => {
-    axios.post("", { cars });
+    await axios.post("", { cars });
   };
 
   const handleClearDB = async (): Promise<any> => {
     setCars(undefined);
     setIsTransformed(false);
-    axios.post("", { cars });
+    await axios.post("", { cars });
   };
-
-  const handleExport = () => {};
 
   let items: JSX.Element[] = [];
   for (
@@ -98,7 +96,7 @@ function App(): JSX.Element {
           <Button variant="primary" onClick={handleClearDB}>
             Clear Database
           </Button>
-          <Button variant="primary" onClick={handleExport}>
+          <Button variant="primary">
             <CSVLink data={carsArrayCSV.toString()} className="app--CSV">
               Export to .csv
             </CSVLink>
