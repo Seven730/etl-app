@@ -1,37 +1,27 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { CSVLink } from "react-csv";
 
-export default function Data(cars: any) {
-  const carsArray = Object.values(cars)[0];
+function Data({ carsArray }: any) {
   console.log(carsArray);
-  return (
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>
-        <Button className="data--button" variant="light">
-          Download
-        </Button>
-      </td>
-    </tr>
-  );
 
-  //   return carsArray.map((car: any) => {
-  //     const { ... } = car
-  //     return (
-  //       <tr>
-  //         <td>1</td>
-  //         <td>Mark</td>
-  //         <td>Otto</td>
-  //         <td>@mdo</td>
-  //         <td>
-  //           <Button className="data--button" variant="light">
-  //             Download
-  //           </Button>
-  //         </td>
-  //       </tr>
-  //     );
-  //   });
+  return (
+    <tbody>
+      {carsArray.map((car: any) => (
+        <tr>
+          <td>{car}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <Button className="data--button" variant="light">
+              <CSVLink data={car.toString()}>Download</CSVLink>
+            </Button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  );
 }
+
+export default Data;
