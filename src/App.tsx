@@ -12,18 +12,18 @@ import axios from "axios";
 import { CSVLink } from "react-csv";
 
 function App(): JSX.Element {
-  const [cars, setCars] = useState<undefined | Object>();
+  const [data, setData] = useState<any>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const rowsPerPage: number = 10;
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [isTransformed, setIsTransformed] = useState<boolean>(false);
 
-  let carsArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "K"];
-  let carsArrayCSV = carsArray;
+  let dataArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "K"];
+  let dataArrayCSV = dataArray;
 
-  const indexOfLastCar = currentPage * rowsPerPage;
-  const indexOfFirstCar = indexOfLastCar - rowsPerPage;
-  const currentCars = carsArray.slice(indexOfFirstCar, indexOfLastCar);
+  const indexofLastItem = currentPage * rowsPerPage;
+  const indexofFirstItem = indexofLastItem - rowsPerPage;
+  const currentData = dataArray.slice(indexofFirstItem, indexofLastItem);
 
   const handleETL = () => {
     handleExtract();
@@ -34,31 +34,38 @@ function App(): JSX.Element {
   const handleExtract = async (): Promise<any> => {
     setLoading(true);
     await axios
-      .get("https://api.github.com/users/Seven730/repos")
+      .get("http://api.nbp.pl/api/exchangerates/tables/B/")
       .then((data) => {
-        setCars(data);
+        setData(data);
         setLoading(false);
       });
   };
 
   const handleTransform = (): void => {
-    setIsTransformed(true);
+    if (data) {
+      setIsTransformed(true);
+      setData(Array.from(data.data[0].rates))
+      console.log(data)
+    }
+    else {
+      alert("Extract data first")
+    }
   };
 
   const handleLoad = async (): Promise<any> => {
-    await axios.post("", { cars });
+    await axios.post("", { data });
   };
 
   const handleClearDB = async (): Promise<any> => {
-    setCars(undefined);
+    setData(undefined);
     setIsTransformed(false);
-    await axios.post("", { cars });
+    await axios.post("", { data });
   };
 
   let items: JSX.Element[] = [];
   for (
     let number = 1;
-    number <= Math.ceil(carsArray.length / rowsPerPage);
+    number <= Math.ceil(dataArray.length / rowsPerPage);
     number++
   ) {
     items.push(
@@ -97,28 +104,27 @@ function App(): JSX.Element {
             Clear Database
           </Button>
           <Button variant="primary">
-            <CSVLink data={carsArrayCSV.toString()} className="app--CSV">
+            <CSVLink data={dataArrayCSV.toString()} className="app--CSV">
               Export to .csv
             </CSVLink>
           </Button>
         </Container>
-        {cars && isTransformed ? (
+        {data && isTransformed ? (
           <Container>
             <Table striped bordered hover size="sm">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Username</th>
+                  <th>Code</th>
+                  <th>Currency</th>
+                  <th>Exchange rate</th>
                   <th>Export (.csv)</th>
                 </tr>
               </thead>
-              <Data carsArray={currentCars} />
+              <Data dataArray={currentData} />
             </Table>
             <Pagination>{items}</Pagination>
           </Container>
-        ) : cars && !isTransformed ? (
+        ) : data && !isTransformed ? (
           <h2 className="data--info">Data needs to be transformed</h2>
         ) : loading ? (
           <h2 className="data--info">Loading...</h2>
