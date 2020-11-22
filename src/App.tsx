@@ -23,7 +23,7 @@ function App(): JSX.Element {
 
   const indexofLastItem = currentPage * rowsPerPage;
   const indexofFirstItem = indexofLastItem - rowsPerPage;
-  const currentData = dataArray.slice(indexofFirstItem, indexofLastItem);
+  let currentData = dataArray.slice(indexofFirstItem, indexofLastItem);
 
   const handleETL = () => {
     handleExtract();
@@ -38,14 +38,15 @@ function App(): JSX.Element {
       .then((data) => {
         setData(data);
         setLoading(false);
+        console.log("Data in Extract: ", data)
       });
   };
 
-  const handleTransform = (): void => {
+  const handleTransform =  (): void => {
     if (data) {
       setIsTransformed(true);
       setData(Array.from(data.data[0].rates))
-      console.log(data)
+      currentData = dataArray.slice(indexofFirstItem, indexofLastItem)
     }
     else {
       alert("Extract data first")
@@ -53,6 +54,7 @@ function App(): JSX.Element {
   };
 
   const handleLoad = async (): Promise<any> => {
+    console.log("Data in Loading: ", data)
     await axios.post("", { data });
   };
 
@@ -63,6 +65,9 @@ function App(): JSX.Element {
   };
 
   let items: JSX.Element[] = [];
+  for (let i = 1; i <= 10; i++) {
+
+  }
   for (
     let number = 1;
     number <= Math.ceil(dataArray.length / rowsPerPage);
@@ -120,7 +125,7 @@ function App(): JSX.Element {
                   <th>Export (.csv)</th>
                 </tr>
               </thead>
-              <Data dataArray={currentData} />
+              <Data data={data && isTransformed ? data : []} />
             </Table>
             <Pagination>{items}</Pagination>
           </Container>

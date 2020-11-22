@@ -2,16 +2,15 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 
-function Data({ dataArray }: any) {
-  console.log(dataArray);
-
+function Data(data: any) {
+  console.log("Data in mapping component", data.data);
   return (
     <tbody>
-      {dataArray.map((item: any) => (
+      {data.data.forEach((item: any) => (
         <tr>
-          <td>{item}</td>
-          <td></td>
-          <td></td>
+          <td>{item.code}</td>
+          <td>{item.currency}</td>
+          <td>{item.mid}</td>
           <td>
             <Button className="data--button" variant="light">
               <CSVLink data={item.toString()}>Download</CSVLink>
