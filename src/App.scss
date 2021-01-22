@@ -1,17 +1,7 @@
-html {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
 .app {
   display: flex;
   justify-content: center;
-  .app__container {
+  &__container {
     width: 70%;
     min-height: 100vh;
     background: whitesmoke;
@@ -27,23 +17,9 @@ body {
   }
 }
 
-.data--button {
-  font-size: 0.8em !important;
-}
-
-.data--info {
-  text-align: center;
-  padding-top: 3.5%;
-}
-
-.data--footer {
-  text-align: center;
-  font-size: 0.9em;
-  bottom: 0;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  position: absolute;
-  margin-bottom: 10px;
+.data {
+  &__info {
+    text-align: center;
+    padding-top: 3.5%;
+  }
 }
